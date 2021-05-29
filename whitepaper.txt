@@ -1,0 +1,11 @@
+Ever been to a mechanics shop and not sure how much that you are going to have to pay? It is awful and car issues can really put a dent in your budget.
+
+We are creating a way where you can easily get quotes from multiple garages or private mechanics without leaving your home (Or the side of the road).
+
+Web app (and eventually android and IOS) to let a user find mechanics near them and get quotes. The fire of the whole app is to allow a user to upload images and explain what is wrong
+and then have mechanic shops give them quotes.
+
+
+The MVP will start as a way to connect customers with auto shops and/or private mechanics by just having a database of customers and mechanics. Customers can find mechanics by zip.
+
+
