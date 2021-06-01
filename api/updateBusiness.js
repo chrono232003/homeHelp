@@ -1,44 +1,42 @@
 /**
+ * Allows for a password update
+ * 
  * DB NAME
  * business_info
  * 
- * DB SCHEMA
- * BusinessName
+ * DB SCHEMA //fields that can be updated and the email address to identify the business account.
+ * Email
+ * 
+ * 
  * AddressLine1
  * City
  * State
  * Zip
  * Services
  * LogoPath
- * Rating
  * Description
  * Hours
  * Phone
- * Email
- * Password
  */
 
 /**
  * POST REQ BODY
- * businessName
+ * email
  * addressLine1
  * city
  * state
  * zip
  * services
  * logoPath
- * rating
  * description
  * hours
  * phone
- * email
- * password
  */
 
  const process = require('../process/processData');
  const common = require('./commonProc')
  
- const storeBusinessInDB = (req, res) => {
+ const updateBusinessInDB = (req, res) => {
      
      //check API key
      if (!common.validApiKeyProvided(req)) {
@@ -50,8 +48,8 @@
      const validateEmail = process.validateEmailAddress(req.body.email);
  
      if (validateFieldsNotNull !== true) {
-         //A failed validation response was given, throw error and return to client TODO: update to check if individual fields are empty.
-         //return res.status(400).send("Malformed Request: " + validateFieldsNotNull);
+         //A failed validation response was given, throw error and return to client
+         return res.status(400).send("Malformed Request: " + validateFieldsNotNull);
      } else if (validateEmail !== true) {
          //A failed validation response was given, throw error and return to client
          return res.status(400).send("Malformed Request: " + validateEmail);
@@ -63,15 +61,15 @@
  
  const createDBQuery = (reqBody) => {
  
-     const queryPrefix = "INSERT INTO business_info "
-     const colsString = "(BusinessName, AddressLine1, City, State, Zip, Services, LogoPath, Rating, Description, Hours, Phone, Email, Password) "
-     const valsString = `VALUES ('${reqBody.businessName}','${reqBody.addressLine1}','${reqBody.city}','${reqBody.state}','${reqBody.zip}','${reqBody.services}','${reqBody.logoPath}','${reqBody.rating}','${reqBody.description}','${reqBody.hours}','${reqBody.phone}','${reqBody.email}','${reqBody.password}')`
+     const queryPrefix = "UPDATE business_info "
+     const colsString = `SET AddressLine1 = '${reqBody.addressLine1}', City = '${reqBody.city}', State = '${reqBody.state}', Zip = '${reqBody.zip}', Services = '${reqBody.services}', LogoPath = '${reqBody.logoPath}', Description = '${reqBody.description}', Hours = '${reqBody.hours}', Phone = '${reqBody.phone}'`
+     const valsString = ` WHERE Email = '${reqBody.email}'`
      
      return queryPrefix + colsString + valsString;
  }
  
  
  module.exports = {
-     storeBusiness: storeBusinessInDB,
-     createDBQuery: createDBQuery
+    updateBusiness: updateBusinessInDB,
+    createDBQuery: createDBQuery
  }
