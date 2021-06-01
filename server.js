@@ -51,6 +51,14 @@ const updateDeal = require('./api/updateDeal')
 app.post('/updateDeal', updateDeal.updateDeal)
 
 
+//delete calls
+const deleteEntity = require('./api/deleteEntity')
+app.post('/deleteEntity', deleteEntity.deleteEntity)
+
+const deleteDeal = require('./api/deleteDeal')
+app.post('/deleteDeal', deleteDeal.deleteDeal)
+
+
 //Throw and HTTP error on the root url.
 app.get('/', (req, res) => {
     res.status(404).send('Not a valid endpoint.');
