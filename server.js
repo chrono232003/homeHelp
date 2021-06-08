@@ -1,12 +1,28 @@
 const express = require("express");
+var cors = require('cors');
+var bodyParser = require('body-parser')
+
 const app = express();
-const port = 3000;
+const port = 3001;
+
+
+//make the post limit 2mb
+//express.json({limit:"5mb"})
+//express.json.limit = "3mb"
+
+//app.use(express.bodyParser({limit: '50mb'}));
 
 //for use with html forms passing in data.
-app.use(express.urlencoded( {extended: true} ))
+//app.use(express.urlencoded( {extended: true} ))
 
 //for json posts
-app.use(express.json())
+//app.use(express.json())
+
+app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
+
+app.use(cors({origin: 'http://localhost:3000'}));
+
+app.use('/images', express.static('images'));
 
 //customer calls
 const createCustomer = require('./api/createCustomer')
@@ -22,6 +38,7 @@ app.post('/createBusiness', createBusiness.storeBusiness)
 
 const getBusiness = require('./api/getBusiness')
 app.post('/getBusiness', getBusiness.getBusiness)
+app.get('/getBusinesses', getBusiness.getBusinesses)
 
 
 //deal calls
@@ -36,8 +53,8 @@ app.post('/getDealsByZip', getDealsByZip.getDealsByZip)
 
 
 //service calls
-const getServices = require('./api/getServices')
-app.get('/getServices', getServices.getServices)
+const getProducts = require('./api/getProducts')
+app.get('/getProducts', getProducts.getProducts)
 
 
 //update calls
@@ -59,9 +76,14 @@ const deleteDeal = require('./api/deleteDeal')
 app.post('/deleteDeal', deleteDeal.deleteDeal)
 
 
-//Throw and HTTP error on the root url.
+
+
+
+
+//Pages
 app.get('/', (req, res) => {
-    res.status(404).send('Not a valid endpoint.');
+    //res.sendFile(path.join(__dirname, './pages', 'index.html'));
+    res.sendStatus(400).send("Not Authorized")
   });
 
 app.listen(port, (err) => {

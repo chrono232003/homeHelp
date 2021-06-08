@@ -4,16 +4,10 @@
  * 
  * DB SCHEMA
  * BusinessName
- * AddressLine1
- * City
- * State
- * Zip
- * Services
+ * TypeOfProduct
  * LogoPath
  * Rating
  * Description
- * Hours
- * Phone
  * Email
  * Password
  */
@@ -21,23 +15,19 @@
 /**
  * POST REQ BODY
  * businessName
- * addressLine1
- * city
- * state
- * zip
- * services
+ * typeOfProduct
  * logoPath
  * rating
  * description
- * hours
- * phone
  * email
  * password
  */
 
  const process = require('../process/processData');
  const common = require('./commonProc')
- 
+
+ fs = require('fs');
+
  const storeBusinessInDB = (req, res) => {
      
      //check API key
@@ -45,6 +35,24 @@
          return res.status(401).send("Not Authorized")
      }
  
+     //store file
+     var imageType = "";
+     if (req.body.logoImage.indexOf('jpeg') || req.body.logoImage.indexOf('jpg')) {
+      imageType = "jpg"
+     } else if (req.body.logoImage.indexOf('png')) {
+      imageType = "png"
+     } else {
+      imageType = "jpg"
+     }
+
+     const logoPath = 'images/'+req.body.businessName.replace(/ /g, "")+"."+imageType
+     const logoImage = decodeBase64Image(req.body.logoImage);
+        fs.writeFile(logoPath, logoImage.data, 'base64', function (err) {
+        if (err) return console.log(err);
+        console.log("successfully uploaded the image!");
+      });
+     
+
      //validations
      const validateFieldsNotNull = process.validateNoValuesEmpty(req.body);
      const validateEmail = process.validateEmailAddress(req.body.email);
@@ -57,19 +65,33 @@
          return res.status(400).send("Malformed Request: " + validateEmail);
      }
  
-     const query = createDBQuery(req.body)
+     const query = createDBQuery(req.body, logoPath)
      return common.queryDB(res, query, false)
  }
  
- const createDBQuery = (reqBody) => {
+ const createDBQuery = (reqBody, logoPath) => {
  
      const queryPrefix = "INSERT INTO business_info "
-     const colsString = "(BusinessName, AddressLine1, City, State, Zip, Services, LogoPath, Rating, Description, Hours, Phone, Email, Password) "
-     const valsString = `VALUES ('${reqBody.businessName}','${reqBody.addressLine1}','${reqBody.city}','${reqBody.state}','${reqBody.zip}','${reqBody.services}','${reqBody.logoPath}','${reqBody.rating}','${reqBody.description}','${reqBody.hours}','${reqBody.phone}','${reqBody.email}','${reqBody.password}')`
+     const colsString = "(BusinessName, TypeOfProduct, LogoPath, Rating, Description, Email, Password, WebsiteLink) "
+     const valsString = `VALUES ('${reqBody.businessName}','${reqBody.typeOfProduct}','${logoPath}','0.0','${reqBody.description}','${reqBody.email}','${reqBody.password}','${reqBody.websiteLink}')`
      
      return queryPrefix + colsString + valsString;
  }
  
+
+ function decodeBase64Image(dataString) {
+    var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+      response = {};
+  
+    if (matches.length !== 3) {
+      return new Error('Invalid input string');
+    }
+  
+    response.type = matches[1];
+    response.data = new Buffer(matches[2], 'base64');
+  
+    return response;
+  }
  
  module.exports = {
      storeBusiness: storeBusinessInDB,

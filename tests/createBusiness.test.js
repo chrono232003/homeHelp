@@ -5,19 +5,13 @@ test('check create customer query', () => {
 
     const reqBody = {
         "businessName":"ABC Biz",
-        "addressLine1":"1255 Youngfield Street",
-        "city":"Golden",
-        "state":"CO",
-        "zip":"80401",
-        "services":"Tire Rotation,Engine Repair",
+        "typeOfProduct":"Makeup",
         "logoPath":"",
         "rating":"0.0",
-        "description":"A very cool mechanics shop",
-        "hours":"M-F-8AM-5PM",
-        "phone":"303-238-7785",
+        "description":"We sell makeup products.",
         "email":"chrono232003@yahoo.com",
-        "password":"Mayafit23!"
+        "password":"testpass"
     }
     
-    expect(createBusiness.createDBQuery(reqBody)).toBe(`INSERT INTO business_info (BusinessName, AddressLine1, City, State, Zip, Services, LogoPath, Rating, Description, Hours, Phone, Email, Password) VALUES ('ABC Biz','1255 Youngfield Street','Golden','CO','80401','Tire Rotation,Engine Repair','','0.0','A very cool mechanics shop','M-F-8AM-5PM','303-238-7785','chrono232003@yahoo.com','Mayafit23!')`);
+    expect(createBusiness.createDBQuery(reqBody)).toBe(`INSERT INTO business_info (BusinessName, TypeOfProduct, LogoPath, Rating, Description, Email, Password) VALUES ('ABC Biz','Makeup','','0.0','We sell makeup products.','chrono232003@yahoo.com','testpass')`);
 });

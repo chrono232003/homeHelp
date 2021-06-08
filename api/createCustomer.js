@@ -28,6 +28,7 @@ const storeCustomerInDB = (req, res) => {
     }
 
     //validations
+    console.log(req.body);
     const validateFieldsNotNull = process.validateNoValuesEmpty(req.body);
     const validateEmail = process.validateEmailAddress(req.body.email);
 

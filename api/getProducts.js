@@ -9,23 +9,23 @@
 
  const common = require('./commonProc')
  
- const getServicesFromDB = (req, res) => {
+ const getProductsFromDB = (req, res) => {
 
     //check API key
-    if (!common.validApiKeyProvided(req)) {
-        return res.status(401).send("Not Authorized")
-    }
+    // if (!common.validApiKeyProvided(req)) {
+    //     return res.status(401).send("Not Authorized")
+    // }
 
     const query = createDBQuery()
     return common.queryDB(res, query, true)
  }
  
  const createDBQuery = () => {
-     return `SELECT * FROM services`;
+     return `SELECT * FROM products`;
  }
  
  
  module.exports = {
-     getServices: getServicesFromDB,
+     getProducts: getProductsFromDB,
      createDBQuery: createDBQuery
  }
